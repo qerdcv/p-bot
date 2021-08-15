@@ -1,0 +1,1 @@
+select COUNT(chat_id) as user_count from p_users where chat_id=?;

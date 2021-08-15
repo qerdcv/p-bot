@@ -1,0 +1,1 @@
+select user_id, username from p_users where chat_id=?;

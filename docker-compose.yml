@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  bot:
+    command: bash -c "python3 /bot/main.py"
+    build:
+      context: .
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+    volumes:
+      - /bot:pidorbot/
