@@ -17,7 +17,7 @@ def scheduling(bot):
         for chat in in_game_chats:
             trigger_chat(chat, bot)
 
-    schedule.every().day.at('09:00').do(trigger_chats)
+    schedule.every().day.at('07:00').do(trigger_chats)
     while not exit_event.is_set():
         schedule.run_pending()
         time.sleep(1)
