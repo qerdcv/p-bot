@@ -12,7 +12,7 @@ from src.config import BASE_DIR
 
 log = logging.getLogger(__name__)
 
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 DB_NAME = 'p.db'
 
 #  TODO: implements with sqlalchemy
