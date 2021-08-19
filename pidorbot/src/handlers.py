@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from src import db, tasks
-from src.config import get_phrases
+from config import get_phrases
 
 log = logging.getLogger(__name__)
 

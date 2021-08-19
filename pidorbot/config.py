@@ -1,4 +1,3 @@
-import os
 import yaml
 
 from pathlib import Path
@@ -7,7 +6,7 @@ from dataclasses import dataclass
 
 
 PHRASES = None
-BASE_DIR = Path(os.path.abspath(os.path.curdir))
+BASE_DIR = Path(__file__).resolve().parent
 
 
 @dataclass
