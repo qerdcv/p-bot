@@ -80,14 +80,6 @@ def ping(upd: Update, ctx: CallbackContext):
     )
 
 
-def temp_ping(upd: Update, ctx: CallbackContext):
-    ctx.bot.send_message(
-        upd.message.chat_id,
-        text="temp pong",
-        reply_to_message_id=upd.message.message_id
-    )
-
-
 def schedule_chat(upd: Update, ctx: CallbackContext):
     chat_id = upd.message.chat_id
     reg_count = db.get_registered_count(chat_id)
