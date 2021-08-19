@@ -33,5 +33,5 @@ jobs:
       run: |
         rsync -avz . ${{ secrets.RASPBERRY_USER }}@${{ secrets.RASPBERRY_HOST }}:~/p-bot
         ssh -T ${{ secrets.RASPBERRY_USER }}@${{ secrets.RASPBERRY_HOST }} << EOF
-          ls -la
+          sudo systemctl restart p-bot
         EOF
