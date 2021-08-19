@@ -8,13 +8,12 @@ from typing import (
     Optional,
 )
 
-from src.config import BASE_DIR
+from config import BASE_DIR
 
 log = logging.getLogger(__name__)
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
-DB_NAME = 'p.db'
-
+DB_NAME = str(BASE_DIR / 'db' / 'p.db')
 #  TODO: implements with sqlalchemy
 
 

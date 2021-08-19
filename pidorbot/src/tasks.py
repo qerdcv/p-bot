@@ -8,7 +8,7 @@ from threading import Thread
 from telegram import Bot
 
 from src import db
-from src.config import get_phrases
+from config import get_phrases
 
 
 log = logging.getLogger(__name__)
