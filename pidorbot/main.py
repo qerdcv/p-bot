@@ -26,6 +26,7 @@ def setup_handlers(dispatcher: telegram.ext.Dispatcher):
     dispatcher.add_handler(CommandHandler('play', handlers.game))
     dispatcher.add_handler(CommandHandler('schedule', handlers.schedule_chat))
     dispatcher.add_handler(CommandHandler('ping', handlers.ping))
+    dispatcher.add_handler(CommandHandler('migrate', handlers.migrate))
 
 
 def handle_exit(sig, frame):

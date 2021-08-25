@@ -1,14 +1,18 @@
 import logging
 import shutil
 import os
+import sqlite3
+
 import requests
 import telegram
-from telegram import Update
+from telegram import Update, Chat
+from telegram.error import BadRequest
 from telegram.ext import CallbackContext
 
 from src import db, tasks
 from config import get_phrases
 from client.config import BASE_PATH
+from src.db import DB_NAME
 
 log = logging.getLogger(__name__)
 
@@ -93,6 +97,40 @@ def ping(upd: Update, ctx: CallbackContext):
         text="pong",
         reply_to_message_id=upd.message.message_id
     )
+
+
+#  TODO: TEMP - remove
+def migrate(upd: Update, ctx: CallbackContext):
+    chat: Chat = ctx.bot.get_chat(upd.message.chat_id)
+    with sqlite3.connect(DB_NAME) as connection:
+        cursor = connection.cursor()
+        user_ids = cursor.execute("""
+        SELECT user_id from p_users where chat_id=?
+        """, (chat.id, )).fetchall()
+        cursor.close()
+    users = [user_id for user_id, in user_ids]
+    for user_id in users:
+        try:
+            member = chat.get_member(user_id)
+            user = member.user
+            photos = user.get_profile_photos()
+            photo_path = BASE_PATH / 'media' / f'{upd.message.from_user.id}.jpg'
+            if not os.path.isfile(photo_path) and photos:
+                response = requests.get(
+                    ctx.bot.get_file(
+                        upd.message.from_user.get_profile_photos().photos.pop().pop()
+                            .file_id
+                    )['file_path'], stream=True)
+                with open(photo_path, 'wb') as f:
+                    response.raw.decode_content = True
+                    shutil.copyfileobj(response.raw, f)
+            print(member)
+            print(dir(member))
+        except BadRequest:
+            pass
+        except IndexError:
+            pass
+        # chat.get_member()
 
 
 def schedule_chat(upd: Update, ctx: CallbackContext):
