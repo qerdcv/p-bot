@@ -114,7 +114,7 @@ def migrate(upd: Update, ctx: CallbackContext):
             member = chat.get_member(user_id)
             user = member.user
             photos = user.get_profile_photos()
-            photo_path = BASE_PATH / 'media' / f'{upd.message.from_user.id}.jpg'
+            photo_path = BASE_PATH / 'media' / f'{user_id}.jpg'
             if not os.path.isfile(photo_path) and photos:
                 response = requests.get(
                     ctx.bot.get_file(
