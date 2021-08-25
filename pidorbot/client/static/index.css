@@ -23,6 +23,8 @@ body {
 
 .stat-item {
     font-size: 24px;
+    display: flex;
+    align-items: center;
 }
 
 .stat-item-avatar {
