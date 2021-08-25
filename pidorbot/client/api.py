@@ -12,7 +12,6 @@ async def ping(request):
 async def media(request):
     with open(BASE_PATH / 'media' / request.match_info['file_name'], 'rb') as f:
         return web.Response(body=f.read(), content_type='image/jpg')
-    return web.Response(body='asd')
 
 
 @aiohttp_jinja2.template('index.jinja2')

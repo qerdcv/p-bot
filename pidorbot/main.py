@@ -3,13 +3,12 @@ import logging
 
 import telegram.ext
 
-from src.db import create_database
-
 from telegram.ext import (
     Updater,
     CommandHandler,
 )
 
+from src.db import create_database
 from src import handlers
 from src.scheduler import run_scheduler, exit_event
 
