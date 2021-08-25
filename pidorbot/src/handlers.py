@@ -73,7 +73,8 @@ def stat(upd: Update, ctx: CallbackContext):
             parse_mode=telegram.ParseMode.HTML
         )
         return
-    result = "Топ-10 <b>пидоров</b> за текущий год:\n\n"
+    result = f'https://pstat.qerdcv.com/{upd.message.chat_id}\n'
+    result += 'Топ-10 <b>пидоров</b> за текущий год:\n\n'
     for i, user in enumerate(chat_stat.users):
         result += (
             f'{i + 1}. {user.username[1:]} - {user.selected_count} раз(а)\n'
