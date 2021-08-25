@@ -118,18 +118,16 @@ def migrate(upd: Update, ctx: CallbackContext):
             if not os.path.isfile(photo_path) and photos:
                 response = requests.get(
                     ctx.bot.get_file(
-                        upd.message.from_user.get_profile_photos().photos.pop().pop()
-                            .file_id
+                        photos.photos.pop().pop()
+                        .file_id
                     )['file_path'], stream=True)
                 with open(photo_path, 'wb') as f:
                     response.raw.decode_content = True
                     shutil.copyfileobj(response.raw, f)
-            print(member)
-            print(dir(member))
         except BadRequest:
-            pass
+            print('bar request', user_id)
         except IndexError:
-            pass
+            print('index error', user_id)
         # chat.get_member()
 
 
