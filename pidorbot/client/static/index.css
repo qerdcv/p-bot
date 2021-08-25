@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    width: 600px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    max-height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-item {
+    font-size: 24px;
+}
+
+.stat-item-avatar {
+    width: 50px;
+    height: auto;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 900px) {
+
+    .container {
+        width: 300px;
+        font-size: 10px;
+    }
+    .stat-item {
+        font-size: 10px;
+    }
+}
