@@ -1,11 +1,14 @@
 import logging
-
+import shutil
+import os
+import requests
 import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
 from src import db, tasks
 from config import get_phrases
+from client.config import BASE_PATH
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +32,17 @@ def registration(upd: Update, ctx: CallbackContext):
     if user is not None:
         ctx.bot.send_message(chat_id, phrases.already_registered)
         return
+    photos = upd.message.from_user.get_profile_photos()
+    photo_path = BASE_PATH / 'media' / f'{upd.message.from_user.id}.jpg'
+    if not os.path.isfile(photo_path) and photos:
+        response = requests.get(
+            ctx.bot.get_file(
+                upd.message.from_user.get_profile_photos().photos.pop().pop()
+                .file_id
+            )['file_path'], stream=True)
+        with open(photo_path, 'wb') as f:
+            response.raw.decode_content = True
+            shutil.copyfileobj(response.raw, f)
     db.register_user(chat_id, user_id, username)
     ctx.bot.send_message(chat_id, phrases.registered)
 
