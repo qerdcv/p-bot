@@ -118,7 +118,7 @@ def migrate(upd: Update, ctx: CallbackContext):
             if not os.path.isfile(photo_path) and photos:
                 response = requests.get(
                     ctx.bot.get_file(
-                        photos.photos.pop().pop()
+                        photos.photos[0][0]
                         .file_id
                     )['file_path'], stream=True)
                 with open(photo_path, 'wb') as f:
