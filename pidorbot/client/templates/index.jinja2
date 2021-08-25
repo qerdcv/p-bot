@@ -11,13 +11,14 @@
 <body>
     <div class="container">
         <h1>ТОП-10 Пидоров за последний год</h1>
-        {% for user in chat_stat.users %}
-            <li class="stat-item">
-                {{ loop.index }}.
-                <span>{{ user.username }} - {{ user.selected_count }} раз(а)</span>
-                <img class="stat-item-avatar" src="/media/{{ user.user_id }}.jpg" alt="avatar">
-            </li>
-        {% endfor %}
+        <div class="stat">
+            {% for user in chat_stat.users %}
+                <div class="stat-item">
+                    <span>{{ loop.index }}. {{ user.username }} - {{ user.selected_count }} раз(а)</span>
+                    <img class="stat-item-avatar" src="/media/{{ user.user_id }}.jpg" alt="avatar">
+                </div>
+            {% endfor %}
+        </div>
         <h2>Всего участников {{ chat_stat.in_game_cnt }}</h2>
     </div>
 </body>
