@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS p_users (
     modified_at DATETIME,
     CONSTRAINT unq UNIQUE (chat_id, user_id)
 );
+
 CREATE TABLE IF NOT EXISTS p_stat (
   id INTEGER PRIMARY KEY,
   chat_id INTEGER NOT NULL,
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS p_stat (
   username VARCHAR(20) NOT NULL,
   choice_date DATETIME NOT NULL
 );
+
 CREATE TABLE  IF NOT EXISTS p
 (
     id INTEGER PRIMARY KEY,
@@ -21,3 +23,6 @@ CREATE TABLE  IF NOT EXISTS p
     scheduled BOOLEAN NOT NULL DEFAULT FALSE,
     modified_at DATETIME
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS p_stat_index
+ON p_stat (id, chat_id, user_id);
