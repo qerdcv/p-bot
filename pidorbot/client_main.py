@@ -1,3 +1,4 @@
+import os
 import pathlib
 
 import aiohttp_jinja2
@@ -14,7 +15,7 @@ def create_app() -> web.Application:
     return app
 
 
-def main():
+def run():
     app = create_app()
     aiohttp_jinja2.setup(
         app,
@@ -22,7 +23,3 @@ def main():
     )
     app['static_root_url'] = '/static'
     web.run_app(host='127.0.0.1', port=4444, app=app)
-
-
-if __name__ == '__main__':
-    main()

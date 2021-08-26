@@ -1,6 +1,8 @@
 import os
 import logging
 
+from multiprocessing import Process
+
 import telegram.ext
 
 from telegram.ext import (
@@ -8,6 +10,7 @@ from telegram.ext import (
     CommandHandler,
 )
 
+from client_main import run
 from src.db import create_database
 from src import handlers
 from src.scheduler import run_scheduler, exit_event
@@ -35,6 +38,11 @@ def handle_exit(sig, frame):
 
 if __name__ == '__main__':
     create_database()
+
+    client_process = Process(target=run)
+    client_process.start()
+    #  Start client process
+
     updater = Updater(
         token=os.environ['BOT_TOKEN'],
         use_context=True,
