@@ -11,7 +11,7 @@ from telegram.ext import CallbackContext
 
 from src import db, tasks
 from config import get_phrases
-from client.config import BASE_PATH
+from client.config import BASE_PATH, MEDIA_PATH
 from src.db import DB_NAME
 
 log = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ def registration(upd: Update, ctx: CallbackContext):
         ctx.bot.send_message(chat_id, phrases.already_registered)
         return
     photos = upd.message.from_user.get_profile_photos().photos
-    photo_path = BASE_PATH / 'media' / f'{upd.message.from_user.id}.jpg'
+    photo_path = MEDIA_PATH / f'{upd.message.from_user.id}.jpg'
     if not os.path.isfile(photo_path) and photos:
         response = requests.get(
             ctx.bot.get_file(

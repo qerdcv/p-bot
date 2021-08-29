@@ -10,6 +10,7 @@ from telegram.ext import (
     CommandHandler,
 )
 
+from client.config import MEDIA_PATH
 from client_main import run
 from src.db import create_database
 from src import handlers
@@ -38,7 +39,7 @@ def handle_exit(sig, frame):
 
 if __name__ == '__main__':
     create_database()
-
+    MEDIA_PATH.mkdir(exist_ok=True)
     client_process = Process(target=run)
     client_process.start()
     #  Start client process

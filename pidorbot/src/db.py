@@ -88,7 +88,7 @@ def get_user(chat_id: int, user_id: int) -> Optional[User]:
         ).fetchone()
         cursor.close()
     if result is not None:
-        return User(**result)
+        return User(*result, 0)
     return result
 
 
