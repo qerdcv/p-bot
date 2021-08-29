@@ -36,12 +36,12 @@ def registration(upd: Update, ctx: CallbackContext):
     if user is not None:
         ctx.bot.send_message(chat_id, phrases.already_registered)
         return
-    photos = upd.message.from_user.get_profile_photos()
+    photos = upd.message.from_user.get_profile_photos().photos
     photo_path = BASE_PATH / 'media' / f'{upd.message.from_user.id}.jpg'
     if not os.path.isfile(photo_path) and photos:
         response = requests.get(
             ctx.bot.get_file(
-                upd.message.from_user.get_profile_photos().photos.pop().pop()
+                photos[0][0]
                 .file_id
             )['file_path'], stream=True)
         with open(photo_path, 'wb') as f:
