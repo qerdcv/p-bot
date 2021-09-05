@@ -5,21 +5,34 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property = "og:image" content = "/static/images/VoVa.jpg" />
+    <meta property="og:title" content="Топ пидоров">
+    <meta property="og:description" content="Пидорский топ">
     <title>PStat</title>
     <link rel="stylesheet" href="{{ static('index.css') }}">
+    <link rel="stylesheet" href="{{ static('buttons.css') }}">
+    <link rel="stylesheet" href="{{ static('stat.css') }}">
+    <link rel="shortcut icon" href="{{ static('images/favicon.ico') }}" type="image/x-icon"/>
 </head>
 <body>
     <div class="container">
-        <h1>ТОП-10 Пидоров за последний год</h1>
-        <div class="stat">
-            {% for user in chat_stat.users %}
-                <div class="stat-item">
-                    <span>{{ loop.index }}. {{ user.username }} - {{ user.selected_count }} раз(а)</span>
-                    <img class="stat-item-avatar" src="/media/{{ user.user_id }}.jpg" alt="avatar">
-                </div>
-            {% endfor %}
+        <h1 class="header">ТОП-10 Пидоров за последний год</h1>
+        <div class="content">
+            <div class="filters">
+                <button class="ladder-button active">Текущий топ</button>
+                <button class="ladder-button">Прошлогодний топ</button>
+                <button class="ladder-button">Топ ладера</button>
+            </div>
+            <div class="stat">
+                {% for user in chat_stat.users %}
+                    <div class="stat-item">
+                        <span>{{ loop.index }}. <a href="https://t.me/{{ user.username[1:] }}" target="_blank">{{ user.username }}</a> - {{ user.selected_count }} раз(а)</span>
+                        <img class="stat-item-avatar" src="/media/{{ user.user_id }}.jpg" alt="avatar">
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-        <h2>Всего участников {{ chat_stat.in_game_cnt }}</h2>
+        <h2 class="footer">Всего ♂fucking slaves♂ {{ chat_stat.in_game_cnt }}</h2>
     </div>
 </body>
 </html>
