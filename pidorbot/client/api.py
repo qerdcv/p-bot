@@ -11,7 +11,11 @@ async def ping(request):
 
 async def media(request):
     with open(BASE_PATH / 'media' / request.match_info['file_name'], 'rb') as f:
-        return web.Response(body=f.read(), content_type='image/jpg')
+        response = web.Response(body=f.read(), content_type='image/jpg')
+        response.headers.update({
+            'Cache-Control': 'max-age=86400',
+        })
+        return response
 
 
 @aiohttp_jinja2.template('index.jinja2')
