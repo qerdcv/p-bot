@@ -19,9 +19,9 @@
         <h1 class="header">ТОП-10 Пидоров за последний год</h1>
         <div class="content">
             <div class="filters">
-                <button class="ladder-button active">Текущий топ</button>
-                <button class="ladder-button">Прошлогодний топ</button>
-                <button class="ladder-button">Топ ладера</button>
+                <a href="?filter=year"><button class="ladder-button {% if active_filter == 'year' %}active{% endif %}">Текущий топ</button></a>
+                <a href="?filter=last_year"><button class="ladder-button {% if active_filter == 'last_year' %}active{% endif %}">Прошлогодний топ</button></a>
+                <a href="?filter=all_time"><button class="ladder-button {% if active_filter == 'all_time' %}active{% endif %}">Топ ладера</button></a>
             </div>
             <div class="stat">
                 {% for user in chat_stat.users %}

@@ -61,14 +61,7 @@ def create_database():
         cursor.close()
 
 
-def get_users_stat(chat_id: int) -> UsersStat:
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        result = cursor.execute(
-            get_query('get_users_stat'),
-            (chat_id, )
-        ).fetchall()
-        cursor.close()
+def result_to_stat(result, chat_id):
     users = []
     if result is not None:
         count = get_registered_count(chat_id)
@@ -77,6 +70,40 @@ def get_users_stat(chat_id: int) -> UsersStat:
             count
         )
     return UsersStat(users, 0)
+
+
+def get_users_stat(chat_id: int) -> UsersStat:
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(
+            get_query('get_users_stat'),
+            (chat_id, )
+        ).fetchall()
+        cursor.close()
+    return result_to_stat(result, chat_id)
+
+
+def get_users_stat_ly(chat_id: int) -> UsersStat:  # ly - last year
+    log.info('execute last year script')
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(
+            get_query('get_users_stat_ly'),
+            (chat_id, )
+        ).fetchall()
+        cursor.close()
+    return result_to_stat(result, chat_id)
+
+
+def get_users_stat_at(chat_id: int) -> UsersStat:  # at - all time
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(
+            get_query('get_users_stat_at'),
+            (chat_id, )
+        ).fetchall()
+        cursor.close()
+    return result_to_stat(result, chat_id)
 
 
 def get_user(chat_id: int, user_id: int) -> Optional[User]:
