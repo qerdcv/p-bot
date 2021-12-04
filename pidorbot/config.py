@@ -13,6 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent
 class Phrases:
     intermediate: List[List[str]]
     result: List[str]
+    record: str
     no_statistic: str
     already_choice: str
     not_enough_registered: str
