@@ -7,11 +7,8 @@ on:
   workflow_run:
     workflows:
       - "Lint"
-    branches:
-      - "master"
     types:
       - completed
-      - requested
 
 jobs:
   build:
