@@ -36,6 +36,12 @@ class ChatStat:
     last_choice: Optional[str]
 
 
+@dataclass
+class StreakStat:
+    current_streak: int
+    best_streak: int
+
+
 def get_date() -> str:
     return datetime.utcnow().strftime(DATE_FORMAT)
 
@@ -188,12 +194,68 @@ def get_registered_users(chat_id: int) -> List[User]:
     ]
 
 
+def get_user_id(chat_id: int, username: str):
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(
+            get_query('get_user_id'),
+            (username, chat_id)
+        ).fetchone()
+        cursor.close()
+    if result is not None:
+        user_id, = result
+        return user_id
+    return None
+
+
+def get_user_streak(chat_id: int, user_id: int):
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        result = cursor.execute(
+            get_query('get_streak_user'),
+            (user_id, chat_id)
+        ).fetchone()
+        cursor.close()
+    if result is not None:
+        streak, best_streak = result
+        return StreakStat(
+            current_streak=streak,
+            best_streak=best_streak
+        )
+    return result
+
+
 def update_chat_winner(chat_id: int, username: str):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
             get_query('update_chat_winner'),
             (get_date(), username, chat_id)
+        )
+        cursor.close()
+
+
+def update_user_best_streak(chat_id: int, user_id: int, streak: int):
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            get_query('update_best_streak'),
+            (get_date(), streak, user_id, chat_id)
+        )
+        cursor.close()
+
+
+def update_user_streak(chat_id: int, user_id: int, streak: bool):
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        if streak is True:
+            score = get_user_streak(chat_id, user_id)
+            new_score = score.current_streak + 1
+        else:
+            new_score = 1
+        cursor.execute(
+            get_query('update_current_streak'),
+            (new_score, user_id, chat_id)
         )
         cursor.close()
 
