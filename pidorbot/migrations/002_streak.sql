@@ -1,0 +1,1 @@
+ALTER TABLE p_stat ADD COLUMN current_streak default 0;

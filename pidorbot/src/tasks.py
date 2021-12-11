@@ -43,9 +43,9 @@ def trigger_chat(chat_id: int, bot: Bot):
             return
     registered_users = db.get_registered_users(chat_id)
     winner = random.choice(registered_users)
-    best_streak = helpers.update_streak(chat_id, chat_stat, winner)
     db.update_chat_winner(chat_id, winner.username)
     db.create_user_stat(chat_id, winner)
+    best_streak = helpers.update_streak(chat_id, chat_stat, winner)
     # TODO: looks like shit. Rewrite with asyncio
     thread = Thread(target=send_result_messages, args=(bot, chat_id, winner, best_streak))
     thread.start()

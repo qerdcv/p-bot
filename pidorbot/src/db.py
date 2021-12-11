@@ -5,7 +5,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from typing import (
     List,
-    Optional, Tuple,
+    Optional
 )
 
 from config import BASE_DIR
