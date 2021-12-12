@@ -1,6 +1,5 @@
-SELECT username, max(current_streak) AS max_streak, (
-    select current_streak from p_stat where p.user_id=? order by id DESC
+SELECT username, max(streak) AS max_streak, (
+    SELECT streak FROM p_stat WHERE user_id=:user_id ORDER BY id DESC
 ) as current_streak
-FROM p_stat as p
-WHERE chat_id=?
-GROUP BY username;
+FROM p_stat
+WHERE chat_id=:chat_id AND user_id=:user_id;

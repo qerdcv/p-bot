@@ -34,13 +34,14 @@ class UsersStat:
 class ChatStat:
     modified_at: datetime
     last_choice: Optional[str]
+    last_choice_id: Optional[int]
 
 
 @dataclass
 class StreakStat:
-    user: str
-    current_streak: int
-    best_streak: int
+    user: Optional[str] = None
+    best_streak: int = 0
+    current_streak: int = 1
 
 
 def get_date() -> str:
@@ -160,10 +161,11 @@ def get_chat(chat_id: int) -> Optional[ChatStat]:
         ).fetchone()
         cursor.close()
     if result is not None:
-        modified_at, last_choice = result
+        modified_at, last_choice, last_choice_id = result
         return ChatStat(
             modified_at=parse_date(modified_at),
-            last_choice=last_choice
+            last_choice=last_choice,
+            last_choice_id=last_choice_id
         )
     return result
 
@@ -214,67 +216,44 @@ def get_streak(chat_id: int, user_id: int):
         cursor = conn.cursor()
         result = cursor.execute(
             get_query('get_streak'),
-            (user_id, chat_id)
+            {
+                'user_id': user_id,
+                'chat_id': chat_id
+            }
         ).fetchone()
         cursor.close()
-    if result is not None:
-        user, streak, best_streak = result
+    if any(result):
+        user, best_streak, streak = result
         return StreakStat(
             user=user,
+            best_streak=best_streak,
             current_streak=streak,
-            best_streak=best_streak
         )
-    return None
+    return StreakStat()
 
 
-def update_streak(chat_id: int, user_id: int, current_streak: int):
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            get_query('update_streak'),
-            (current_streak, user_id, chat_id, chat_id)
-        )
-        cursor.close()
-
-
-def is_best_streak(chat_id: int, user_id: int, current_streak: int):
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        result = cursor.execute(
-            get_query('find_best_streak'),
-            (chat_id, user_id)
-        ).fetchone()
-        cursor.close()
-        if result is not None:
-            best_streak, = result
-            print(f'current_streak = {current_streak} best_streak = {best_streak}')
-            if current_streak > best_streak:
-                return True
-            return False
-        return None
-
-
-def update_chat_winner(chat_id: int, username: str):
+def update_chat_winner(chat_id: int, username: str, user_id: int):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
             get_query('update_chat_winner'),
-            (get_date(), username, chat_id)
+            (get_date(), username, user_id, chat_id)
         )
         cursor.close()
 
 
-def create_user_stat(chat_id, user: User):
+def create_user_stat(chat_id: int, user: User, streak: int):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
             get_query('create_user_stat'),
-            (
-                chat_id,
-                user.user_id,
-                get_date(),
-                user.username
-            )
+            {
+                "chat_id": chat_id,
+                "user_id": user.user_id,
+                "choice_date": get_date(),
+                "username": user.username,
+                "streak": streak
+            }
         )
         cursor.close()
 
