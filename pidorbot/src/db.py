@@ -1,4 +1,5 @@
 import logging
+import os
 import sqlite3
 
 from datetime import datetime
@@ -13,7 +14,7 @@ from config import BASE_DIR
 log = logging.getLogger(__name__)
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
-DB_NAME = str(BASE_DIR / 'db' / 'p.db')
+DB_NAME = str(BASE_DIR / 'db' / os.getenv('DB_NAME', 'p.db'))
 #  TODO: implements with sqlalchemy
 
 
@@ -65,6 +66,10 @@ def create_database():
         cursor.executescript(get_query('init'))
         conn.commit()
         cursor.close()
+
+
+def remove_database():
+    os.remove(DB_NAME)
 
 
 def result_to_stat(result, chat_id):

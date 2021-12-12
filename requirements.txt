@@ -4,3 +4,4 @@ schedule==1.1.0
 aiohttp==3.7.4.post0
 aiohttp-jinja2==1.5
 requests==2.26.0
+pytest==6.2.5

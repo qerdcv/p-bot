@@ -4,3 +4,4 @@ env/
 venv/
 *.db
 media/
+.pytest_cache

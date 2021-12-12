@@ -12,3 +12,8 @@ build:
 rm:
 	$(COMPOSE) stop
 	$(COMPOSE) rm -f
+
+test:
+	export DB_NAME="test.db"
+	export PYTHONPATH="$(pwd)/pidorbot"
+	pytest -v pidorbot/test;
