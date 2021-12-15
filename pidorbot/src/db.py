@@ -6,7 +6,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from typing import (
     List,
-    Optional,
+    Optional
 )
 
 from config import BASE_DIR
@@ -35,12 +35,14 @@ class UsersStat:
 class ChatStat:
     modified_at: datetime
     last_choice: Optional[str]
+    last_choice_id: Optional[int]
 
 
 @dataclass
 class StreakStat:
-    current_streak: int
-    best_streak: int
+    user: Optional[str] = None
+    best_streak: int = 0
+    current_streak: int = 1
 
 
 def get_date() -> str:
@@ -164,10 +166,11 @@ def get_chat(chat_id: int) -> Optional[ChatStat]:
         ).fetchone()
         cursor.close()
     if result is not None:
-        modified_at, last_choice = result
+        modified_at, last_choice, last_choice_id = result
         return ChatStat(
             modified_at=parse_date(modified_at),
-            last_choice=last_choice
+            last_choice=last_choice,
+            last_choice_id=last_choice_id
         )
     return result
 
@@ -213,69 +216,49 @@ def get_user_id(chat_id: int, username: str):
     return None
 
 
-def get_user_streak(chat_id: int, user_id: int):
+def get_streak(chat_id: int, user_id: int):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         result = cursor.execute(
-            get_query('get_streak_user'),
-            (user_id, chat_id)
+            get_query('get_streak'),
+            {
+                'user_id': user_id,
+                'chat_id': chat_id
+            }
         ).fetchone()
         cursor.close()
-    if result is not None:
-        streak, best_streak = result
+    if any(result):
+        user, best_streak, streak = result
         return StreakStat(
+            user=user,
+            best_streak=best_streak,
             current_streak=streak,
-            best_streak=best_streak
         )
-    return result
+    return StreakStat()
 
 
-def update_chat_winner(chat_id: int, username: str):
+def update_chat_winner(chat_id: int, username: str, user_id: int):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
             get_query('update_chat_winner'),
-            (get_date(), username, chat_id)
+            (get_date(), username, user_id, chat_id)
         )
         cursor.close()
 
 
-def update_user_best_streak(chat_id: int, user_id: int, streak: int):
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        cursor.execute(
-            get_query('update_best_streak'),
-            (get_date(), streak, user_id, chat_id)
-        )
-        cursor.close()
-
-
-def update_user_streak(chat_id: int, user_id: int, streak: bool):
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        if streak is True:
-            score = get_user_streak(chat_id, user_id)
-            new_score = score.current_streak + 1
-        else:
-            new_score = 1
-        cursor.execute(
-            get_query('update_current_streak'),
-            (new_score, user_id, chat_id)
-        )
-        cursor.close()
-
-
-def create_user_stat(chat_id, user: User):
+def create_user_stat(chat_id: int, user: User, streak: int):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
             get_query('create_user_stat'),
-            (
-                chat_id,
-                user.user_id,
-                get_date(),
-                user.username
-            )
+            {
+                "chat_id": chat_id,
+                "user_id": user.user_id,
+                "choice_date": get_date(),
+                "username": user.username,
+                "streak": streak
+            }
         )
         cursor.close()
 
