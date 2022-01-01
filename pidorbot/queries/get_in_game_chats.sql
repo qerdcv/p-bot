@@ -1,1 +1,1 @@
-select chat_id from p where scheduled=TRUE;
+SELECT chat_id FROM p WHERE scheduled=TRUE;

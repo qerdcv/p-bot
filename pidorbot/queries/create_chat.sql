@@ -1,1 +1,1 @@
-INSERT INTO p(chat_id,  modified_at) values (?,?);
+INSERT INTO p(chat_id,  modified_at) VALUES (?,?);

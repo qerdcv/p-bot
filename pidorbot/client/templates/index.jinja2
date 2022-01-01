@@ -16,7 +16,13 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="header">ТОП-10 Пидоров за последний год</h1>
+        {% if active_filter == 'year' %}
+            <h1 class="header">ТОП-10 Пидоров за последний год</h1>
+        {% elif active_filter == 'last_year' %}
+            <h1 class="header">ТОП-10 Пидоров за предыдущий год</h1>
+        {% else %}
+            <h1 class="header">ТОП-10 Пидоров за всё время</h1>
+        {% endif %}
         <div class="content">
             <div class="filters">
                 <a href="?filter=year"><button class="ladder-button {% if active_filter == 'year' %}active{% endif %}">Текущий топ</button></a>

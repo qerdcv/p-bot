@@ -1,3 +1,3 @@
-select user_id, username, count(user_id) as count from p_stat
-where chat_id=? and cast(strftime('%Y', choice_date) as integer) > DATE() - 1
-group by user_id ORDER BY count DESC LIMIT 10;
+SELECT user_id, username, count(user_id) AS count FROM p_stat
+WHERE chat_id=? AND cast(strftime('%Y', choice_date) AS INTEGER) > DATE() - 1
+GROUP BY user_id ORDER BY count DESC LIMIT 10;
