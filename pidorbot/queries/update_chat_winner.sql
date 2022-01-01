@@ -1,7 +1,7 @@
-update main.p
-set
+UPDATE p
+SET
     modified_at=?,
     last_choice=?,
     user_id=?
-where
+WHERE
     chat_id=?

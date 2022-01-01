@@ -1,1 +1,1 @@
-select user_id, username from p_users where chat_id=?;
+SELECT user_id, username FROM p_users WHERE chat_id=?;
