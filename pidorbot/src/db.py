@@ -24,11 +24,24 @@ class User:
     username: str
     selected_count: Optional[int]
 
+    def to_dict(self) -> dict:
+        return {
+            'user_id': self.user_id,
+            'username': self.username,
+            'selected_count': self.selected_count
+        }
+
 
 @dataclass
 class UsersStat:
     users: List[User]
     in_game_cnt: int
+
+    def to_dict(self) -> dict:
+        return {
+            'users': list(map(lambda user: user.to_dict(), self.users)),
+            'in_game_cnt': self.in_game_cnt
+        }
 
 
 @dataclass
@@ -74,15 +87,13 @@ def remove_database():
     os.remove(DB_NAME)
 
 
-def result_to_stat(result, chat_id):
-    users = []
-    if result is not None:
+def result_to_stat(result, chat_id) -> Optional[UsersStat]:
+    if result:
         count = get_registered_count(chat_id)
         return UsersStat(
             [User(*row) for row in result],
             count
         )
-    return UsersStat(users, 0)
 
 
 def get_users_stat(chat_id: int) -> UsersStat:
