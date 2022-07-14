@@ -9,6 +9,9 @@ on:
       - "Lint"
     types:
       - completed
+  push:
+    branches:
+      - master
 
 jobs:
   build:

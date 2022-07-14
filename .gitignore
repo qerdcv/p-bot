@@ -5,3 +5,4 @@ venv/
 *.db
 media/
 .pytest_cache
+*.log
