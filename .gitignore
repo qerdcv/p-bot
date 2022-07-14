@@ -5,4 +5,5 @@ venv/
 *.db
 media/
 .pytest_cache
+.vscode/launch.json
 *.log
