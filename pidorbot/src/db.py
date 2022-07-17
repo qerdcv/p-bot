@@ -1,15 +1,12 @@
 import logging
 import os
 import sqlite3
-
+import typing as t
 from datetime import datetime
 from dataclasses import dataclass
-from typing import (
-    List,
-    Optional
-)
 
 from config import BASE_DIR
+from client.api import FilterEnum
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +19,7 @@ DB_NAME = str(BASE_DIR / 'db' / os.getenv('DB_NAME', 'p.db'))
 class User:
     user_id: int
     username: str
-    selected_count: Optional[int]
+    selected_count: t.Optional[int]
 
     def to_dict(self) -> dict:
         return {
@@ -34,7 +31,7 @@ class User:
 
 @dataclass
 class UsersStat:
-    users: List[User]
+    users: t.List[User]
     in_game_cnt: int
 
     def to_dict(self) -> dict:
@@ -47,13 +44,13 @@ class UsersStat:
 @dataclass
 class ChatStat:
     modified_at: datetime
-    last_choice: Optional[str]
-    last_choice_id: Optional[int]
+    last_choice: t.Optional[str]
+    last_choice_id: t.Optional[int]
 
 
 @dataclass
 class StreakStat:
-    user: Optional[str] = None
+    user: t.Optional[str] = None
     best_streak: int = 0
     current_streak: int = 1
 
@@ -87,7 +84,7 @@ def remove_database():
     os.remove(DB_NAME)
 
 
-def result_to_stat(result, chat_id) -> Optional[UsersStat]:
+def result_to_stat(result, chat_id) -> t.Optional[UsersStat]:
     if result:
         count = get_registered_count(chat_id)
         return UsersStat(
@@ -96,41 +93,18 @@ def result_to_stat(result, chat_id) -> Optional[UsersStat]:
         )
 
 
-def get_users_stat(chat_id: int) -> UsersStat:
+def get_users_stat(chat_id: int, filter_: FilterEnum = FilterEnum.year) -> t.Optional[UsersStat]:
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         result = cursor.execute(
-            get_query('get_users_stat'),
+            get_query(f'get_users_stat_{filter_.value}'),
             (chat_id, )
         ).fetchall()
         cursor.close()
     return result_to_stat(result, chat_id)
 
 
-def get_users_stat_ly(chat_id: int) -> UsersStat:  # ly - last year
-    log.info('execute last year script')
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        result = cursor.execute(
-            get_query('get_users_stat_ly'),
-            (chat_id, )
-        ).fetchall()
-        cursor.close()
-    return result_to_stat(result, chat_id)
-
-
-def get_users_stat_at(chat_id: int) -> UsersStat:  # at - all time
-    with sqlite3.connect(DB_NAME) as conn:
-        cursor = conn.cursor()
-        result = cursor.execute(
-            get_query('get_users_stat_at'),
-            (chat_id, )
-        ).fetchall()
-        cursor.close()
-    return result_to_stat(result, chat_id)
-
-
-def get_user(chat_id: int, user_id: int) -> Optional[User]:
+def get_user(chat_id: int, user_id: int) -> t.Optional[User]:
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         result = cursor.execute(
@@ -169,7 +143,7 @@ def get_registered_count(chat_id: int) -> int:
     return count
 
 
-def get_chat(chat_id: int) -> Optional[ChatStat]:
+def get_chat(chat_id: int) -> t.Optional[ChatStat]:
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         result = cursor.execute(
@@ -198,7 +172,7 @@ def create_chat(chat_id: int):
         cursor.close()
 
 
-def get_registered_users(chat_id: int) -> List[User]:
+def get_registered_users(chat_id: int) -> t.List[User]:
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         rows = cursor.execute(
@@ -281,7 +255,7 @@ def switch_scheduler(chat_id: int):
         cursor.close()
 
 
-def get_in_game_chats() -> List[int]:
+def get_in_game_chats() -> t.List[int]:
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         rows = cursor.execute(get_query('get_in_game_chats')).fetchall()

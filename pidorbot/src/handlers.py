@@ -68,9 +68,9 @@ def game(upd: Update, ctx: CallbackContext):
 
 def stat(upd: Update, ctx: CallbackContext):
     chat_id = upd.message.chat_id
-    chat_stat = db.get_users_stat(upd.message.chat_id)
+    chat_stat = db.get_users_stat(chat_id)
     phrases = get_phrases()
-    if len(chat_stat.users) == 0:
+    if chat_stat is None:
         ctx.bot.send_message(
             chat_id,
             text=phrases.no_statistic.format(parse_username(upd)),

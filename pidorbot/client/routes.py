@@ -9,5 +9,5 @@ routes = [
     web.static('/static', BASE_PATH / 'static'),
 
     web.get('/api/ping', api.ping),
-    web.get('/api/get-users/{chat_id}', api.get_users)
+    web.get('/api/chats/{chat_id}', api.get_users)
 ]
