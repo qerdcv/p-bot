@@ -97,8 +97,11 @@ def get_users_stat(chat_id: int, filter_: FilterEnum = FilterEnum.year) -> t.Opt
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         result = cursor.execute(
-            get_query(f'get_users_stat_{filter_.value}'),
-            (chat_id, )
+            get_query('get_users_stat'),
+            {
+                'filter_': filter_.value,
+                'chat_id': chat_id
+            }
         ).fetchall()
         cursor.close()
     return result_to_stat(result, chat_id)
