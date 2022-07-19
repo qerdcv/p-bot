@@ -10,6 +10,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: url("/static/images/rainbow.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 code {
@@ -27,4 +29,11 @@ code {
 
 h1 {
   text-align: center;
+}
+
+@media screen and (max-width: 900px) {
+
+  h1{
+    font-size: 20px;
+  }
 }

@@ -1,30 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import UserList from './users/UserList'
-import Filters from './users/Filters'
+import UserList from './Users/UserList'
+import Filters from './Filters/Filters'
+import Paginator from './Paginator/Paginator'
 
 function App() {
-  const users = [
-    {user_id: 549675022, username: '@VIBtea', selected_count: 36},
-    {user_id: 371668940, username: '@chykchas', selected_count: 35},
-    {user_id: 553092701, username: '@qerdcv', selected_count: 33},
-    {user_id: 443242502, username: '@polymorphous', selected_count: 31},
-    {user_id: 475527566, username: '@dr0zdoff', selected_count: 24},
-    {user_id: 549675022, username: '@VIBtea', selected_count: 36},
-    {user_id: 371668940, username: '@chykchas', selected_count: 35},
-    {user_id: 553092701, username: '@qerdcv', selected_count: 33},
-    {user_id: 443242502, username: '@polymorphous', selected_count: 31},
-    {user_id: 475527566, username: '@dr0zdoff', selected_count: 24},
-  ]
+  const paginator = {
+    page: 1,
+    limit: 10,
+    total_pages: 10
+  }
 
-  const in_game_cnt = users.length
+  const [users, setUsers] = useState([])
+  const [inGameCnt, setInGameCnt] = useState(0)
+  const [currentType, setCurrentType] = useState()
+  const [page, setPage] = useState()
+  const [limit, setLimit] = useState()
+
+  useEffect(() => {
+    fetch(`${window.location.pathname}?filter=${currentType}&page=${page}`)
+    .then((resp) => resp.json())
+    .then((data) => {setUsers(data.users); setInGameCnt(data.in_game_cnt)})
+    .catch((error) => {console.error(error)})
+  }, [currentType, page])
+
+  useEffect(() => {
+    setCurrentType(
+      new URLSearchParams(window.location.search).get("filter") || "year"
+    )
+    setPage(
+      new URLSearchParams(window.location.search).get("page") || "1"
+    )
+    setLimit(
+      new URLSearchParams(window.location.search).get("limit") || "10"
+    )
+  }, [])
+
+  const onFilterClick = (type) => {
+    window.history.pushState(null, window.title, `?filter=${type}`)
+    setCurrentType(type)
+    setPage(1)
+  }
+
+  const onPaginatorClick = (page) => {
+    window.history.pushState(null, window.title, `?filter=${currentType}&page=${page}`)
+    setPage(page)
+  }
 
   return (
     <div className='wrapper'>
-      <h1 className='titleHead'>ТОП-10 Лучших людей за последний год</h1>
-      <Filters></Filters>
+      <h1 className='titleHead'>{`ТОП-${limit} Лучших людей за последний год`}</h1>
+      <Filters 
+      currentType={currentType}
+      onFilterClick={onFilterClick} />
       <UserList users={users}></UserList>
-      <h1 className='titleFoot'>Всего ♂slaves♂ {in_game_cnt}</h1>
+      <Paginator 
+      totalPages={parseInt(paginator.total_pages)} 
+      currentPage={parseInt(page)}
+      onClick={onPaginatorClick} />
+      <h1 className='titleFoot'>Всего ♂slaves♂ {inGameCnt}</h1>
     </div>
   )
 }

@@ -1,31 +1,27 @@
 import React from "react"
-import Button from "../utils/Button"
+import Button from "../Button/Button"
 import styles from "./filters.module.css"
 
-const filtersName = [
-  'Текущий топ',
-  'Прошлогодний топ',
-  'Топ ладера'
-]
+const filters = {
+  year: "Текущий топ",
+  last_year: "Прошлогодний топ",
+  all_time: "Топ ладера",
+}
 
-function Filters(props) {
+function Filters({currentType, onFilterClick}) {
   return (
-    <div className={styles.filter}>
-      {filtersName.map((filterName, idx) => {
-          return <Button
-          key={idx}
-          text={filterName} 
-          styleButton={
-            props.activeFilterIdx === idx ? `${styles.filterButton} active` : styles.filterButton
-          }>
-          </Button>
+    <div className={styles.filters}>
+      {Object.entries(filters).map(([type, text], idx) => {
+        return <Button
+        key={idx}
+        text={text}
+        type={type} 
+        isActive={currentType === type}
+        onClick={onFilterClick}>
+        </Button>
       })}
     </div>
   )
-}
-
-Filters.defaultProps = {
-  activeFilterIdx: 0
 }
 
 export default Filters

@@ -11,7 +11,7 @@ function User({user, idx}) {
             {user.username}
           </a> - {user.selected_count} раз(а)
       </div>
-      <img className={styles.userAvatar} src={`http://localhost:4444/media/${user.user_id}.jpg`} alt="avatar"></img>
+      <img className={styles.userAvatar} src={`/media/${user.user_id}.jpg`} alt="avatar"></img>
     </li>
   )
 }

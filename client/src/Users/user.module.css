@@ -4,11 +4,13 @@
   align-items: center;
   padding: .5rem 1rem;
   margin-bottom: .5rem;
+  font-size: 22px;
+  color: white;
 }
 
 .userLink {
   text-decoration: none;
-  color: green
+  color: white
 }
 
 .userAvatar {
@@ -16,4 +18,13 @@
   height: 60px;
   border-radius: 40%;
   margin-left: 1.5rem;
+}
+
+@media screen and (max-width: 900px) {
+  .userItem {
+      font-size: 16px;
+  }
+  .userAvatar {
+      width: 60px;
+  }
 }
