@@ -13,9 +13,10 @@ exit_event = threading.Event()
 def scheduling(bot):
 
     def trigger_chats():
+        date = db.get_date()
         in_game_chats = db.get_in_game_chats()
         for chat in in_game_chats:
-            trigger_chat(chat, bot)
+            trigger_chat(chat, bot, date)
 
     schedule.every().day.at('07:00').do(trigger_chats)
     while not exit_event.is_set():
