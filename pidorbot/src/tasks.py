@@ -2,8 +2,9 @@ import logging
 import random
 import time
 
+import typing as t
+
 from datetime import datetime
-from typing import Optional
 from threading import Thread
 
 from telegram import Bot
@@ -15,7 +16,7 @@ from config import get_phrases
 log = logging.getLogger(__name__)
 
 
-def send_result_messages(bot: Bot, chat_id, winner: db.User, new_record: Optional[int]):
+def send_result_messages(bot: Bot, chat_id, winner: db.User, new_record: t.Optional[int]):
     phrases = get_phrases()
     response_phrases = random.choice(phrases.intermediate)
     response_phrase = random.choice(phrases.result)
@@ -28,7 +29,7 @@ def send_result_messages(bot: Bot, chat_id, winner: db.User, new_record: Optiona
         bot.send_message(chat_id, new_record_phrase.format(winner.username, str(new_record)))
 
 
-def trigger_chat(chat_id: int, bot: Bot):
+def trigger_chat(chat_id: int, bot: Bot, choice_date: t.Optional[str] = None):
     chat_stat = db.get_chat(chat_id)
     phrases = get_phrases()
     if chat_stat is None:
@@ -50,7 +51,7 @@ def trigger_chat(chat_id: int, bot: Bot):
     else:
         streak.current_streak += 1
     db.update_chat_winner(chat_id, winner.username, winner.user_id)
-    db.create_user_stat(chat_id, winner, streak.current_streak)
+    db.create_user_stat(chat_id, winner, streak.current_streak, choice_date)
     if streak.current_streak <= streak.best_streak:
         streak = None
     else:

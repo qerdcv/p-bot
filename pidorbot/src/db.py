@@ -235,7 +235,7 @@ def update_chat_winner(chat_id: int, username: str, user_id: int):
         cursor.close()
 
 
-def create_user_stat(chat_id: int, user: User, streak: int):
+def create_user_stat(chat_id: int, user: User, streak: int, choice_date: t.Optional[str] = None):
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -243,7 +243,7 @@ def create_user_stat(chat_id: int, user: User, streak: int):
             {
                 "chat_id": chat_id,
                 "user_id": user.user_id,
-                "choice_date": get_date(),
+                "choice_date": choice_date or get_date(),
                 "username": user.username,
                 "streak": streak
             }
